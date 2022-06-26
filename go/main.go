@@ -332,7 +332,7 @@ type ImageTmp struct {
 
 func createIconsFromRDB() error {
 	var images []ImageTmp
-	err := db.Get(&images, "SELECT `jia_user_id`,`jia_isu_uuid`,`image` FROM `isu`")
+	err := db.Select(&images, "SELECT `jia_user_id`,`jia_isu_uuid`,`image` FROM `isu`")
 	if err != nil {
 		return err
 	}
