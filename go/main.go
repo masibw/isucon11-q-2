@@ -586,9 +586,7 @@ func postIsu(c echo.Context) error {
 		}
 		useDefaultImage = true
 	}
-
-	var image []byte
-
+	
 	if useDefaultImage {
 		// image, err = ioutil.ReadFile(defaultIconFilePath)
 		src, err := os.Open(defaultIconFilePath)
