@@ -1258,6 +1258,14 @@ func getTrend(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+type PostIsuConditionRequestForDB struct {
+	IsSitting  bool      `json:"is_sitting"`
+	Condition  string    `json:"condition"`
+	Message    string    `json:"message"`
+	Timestamp  time.Time `json:"timestamp"`
+	jiaIsuUUID string    `json:"jia_isu_uuid"`
+}
+
 // POST /api/condition/:jia_isu_uuid
 // ISUからのコンディションを受け取る
 func postIsuCondition(c echo.Context) error {
@@ -1298,23 +1306,22 @@ func postIsuCondition(c echo.Context) error {
 		return c.String(http.StatusNotFound, "not found: isu")
 	}
 
+	postIsuConditionRequestForDB := []PostIsuConditionRequestForDB{}
+
 	for _, cond := range req {
 		timestamp := time.Unix(cond.Timestamp, 0)
-
 		if !isValidConditionFormat(cond.Condition) {
 			return c.String(http.StatusBadRequest, "bad request body")
 		}
-
-		_, err = tx.Exec(
-			"INSERT INTO `isu_condition`"+
-				"	(`jia_isu_uuid`, `timestamp`, `is_sitting`, `condition`, `message`)"+
-				"	VALUES (?, ?, ?, ?, ?)",
-			jiaIsuUUID, timestamp, cond.IsSitting, cond.Condition, cond.Message)
-		if err != nil {
-			c.Logger().Errorf("db error: %v", err)
-			return c.NoContent(http.StatusInternalServerError)
-		}
-
+		postIsuConditionRequestForDB = append(postIsuConditionRequestForDB, PostIsuConditionRequestForDB{IsSitting: cond.IsSitting, Condition: cond.Condition, Message: cond.Message, Timestamp: timestamp, jiaIsuUUID: jiaIsuUUID})
+	}
+	_, err = tx.NamedExec(
+		"INSERT INTO `isu_condition`"+
+			"	(`jia_isu_uuid`, `timestamp`, `is_sitting`, `condition`, `message`)"+
+			"	VALUES (:jia_isu_uuid, :timestamp, :is_sitting, :condition, :message)", postIsuConditionRequestForDB)
+	if err != nil {
+		c.Logger().Errorf("db error: %v", err)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 
 	err = tx.Commit()
