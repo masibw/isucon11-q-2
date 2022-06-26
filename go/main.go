@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"os/exec"
 	"sort"
@@ -247,11 +248,25 @@ func main() {
 	db.SetMaxOpenConns(10)
 	defer db.Close()
 
+	for {
+		err := db.Ping()
+		if err == nil {
+			break
+		}
+		fmt.Println("db connection error:", err)
+		time.Sleep(time.Second * 1)
+	}
+
 	postIsuConditionTargetBaseURL = os.Getenv("POST_ISUCONDITION_TARGET_BASE_URL")
 	if postIsuConditionTargetBaseURL == "" {
 		e.Logger.Fatalf("missing: POST_ISUCONDITION_TARGET_BASE_URL")
 		return
 	}
+
+	// pprof
+	go func() {
+		log.Print(http.ListenAndServe("0.0.0.0:6060", nil))
+	}()
 
 	serverPort := fmt.Sprintf(":%v", getEnv("SERVER_APP_PORT", "3000"))
 	e.Logger.Fatal(e.Start(serverPort))
