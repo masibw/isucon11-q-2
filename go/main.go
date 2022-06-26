@@ -517,7 +517,7 @@ func getIsuList(c echo.Context) error {
 			formattedCondition = &GetIsuConditionResponse{
 				JIAIsuUUID:     isu.JIAIsuUUID,
 				IsuName:        isu.Name,
-				Timestamp:      isu.Timestamp.Unix(),
+				Timestamp:      isu.Timestamp.Time.Unix(),
 				IsSitting:      *isu.IsSitting,
 				Condition:      *isu.Condition,
 				ConditionLevel: conditionLevel,
