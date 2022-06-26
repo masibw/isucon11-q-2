@@ -17,7 +17,7 @@ WITH con AS (
 
 SELECT 
 	id, 
-	c.jia_isu_uuid, 
+	isu.jia_isu_uuid, 
 	isu.name, 
 	isu.character,
 	latest_time as timestamp,
