@@ -455,18 +455,18 @@ func getMe(c echo.Context) error {
 }
 
 type IsuForGetIsuListFromDB struct {
-	ID         int        `db:"id" json:"id"`
-	JIAIsuUUID string     `db:"jia_isu_uuid" json:"jia_isu_uuid"`
-	Name       string     `db:"name" json:"name"`
-	Image      []byte     `db:"image" json:"-"`
-	Character  string     `db:"character" json:"character"`
-	JIAUserID  string     `db:"jia_user_id" json:"-"`
-	CreatedAt  time.Time  `db:"created_at" json:"-"`
-	UpdatedAt  time.Time  `db:"updated_at" json:"-"`
-	Timestamp  *time.Time `db:"timestamp"`
-	IsSitting  *bool      `db:"is_sitting"`
-	Condition  *string    `db:"condition"`
-	Message    *string    `db:"message"`
+	ID         int            `db:"id" json:"id"`
+	JIAIsuUUID string         `db:"jia_isu_uuid" json:"jia_isu_uuid"`
+	Name       string         `db:"name" json:"name"`
+	Image      []byte         `db:"image" json:"-"`
+	Character  string         `db:"character" json:"character"`
+	JIAUserID  string         `db:"jia_user_id" json:"-"`
+	CreatedAt  time.Time      `db:"created_at" json:"-"`
+	UpdatedAt  time.Time      `db:"updated_at" json:"-"`
+	Timestamp  mysql.NullTime `db:"timestamp"`
+	IsSitting  *bool          `db:"is_sitting"`
+	Condition  *string        `db:"condition"`
+	Message    *string        `db:"message"`
 }
 
 // GET /api/isu
