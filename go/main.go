@@ -461,7 +461,7 @@ type IsuForGetIsuListFromDB struct {
 	Image      []byte         `db:"image" json:"-"`
 	Character  string         `db:"character" json:"character"`
 	JIAUserID  string         `db:"jia_user_id" json:"-"`
-	CreatedAt  time.Time      `db:"created_at" json:"-"`
+	CreatedAt  mysql.NullTime `db:"created_at" json:"-"`
 	UpdatedAt  time.Time      `db:"updated_at" json:"-"`
 	Timestamp  mysql.NullTime `db:"timestamp"`
 	IsSitting  *bool          `db:"is_sitting"`
